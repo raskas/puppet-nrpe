@@ -55,7 +55,7 @@ class nrpe::check_ping {
       owner   => "root",
       group   => "root",
       mode    => 0644,
-      content => "command[check_ping]=/usr/lib/nagios/plugins/check_ping -H \$ARG1$ -w 2000,50% -c 5000,75%",
+      content => "command[check_ping]=/usr/lib/nagios/plugins/check_ping -4 -H \$ARG1$ -w 2000,50% -c 5000,75%\ncommand[check_ping6]=/usr/lib/nagios/plugins/check_ping -6 -H \$ARG1$ -w 2000,50% -c 5000,75%\n",
       notify  => Service["nrpe"];
   }
 
@@ -69,6 +69,21 @@ define nrpe::check_ping::storeconfig {
     "check_ping_${hostname}_${name}":
       check_command       => "check_ping_remote!${name}",
       service_description => "PING ${name}",
+      host_name           => "${hostname}",
+      use                 => 'ntc-service',
+      tag                 => 'icinga';
+  }
+
+}
+
+define nrpe::check_ping6::storeconfig {
+
+  include nrpe::check_ping
+
+  @@nagios_service {
+    "check_ping6_${hostname}_${name}":
+      check_command       => "check_ping6_remote!${name}",
+      service_description => "PING6 ${name}",
       host_name           => "${hostname}",
       use                 => 'ntc-service',
       tag                 => 'icinga';
