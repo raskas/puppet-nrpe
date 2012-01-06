@@ -9,7 +9,7 @@
 #
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-allowed_hosts=<%= allowed_hosts.join(',') %>
+allowed_hosts=127.0.0.1,<%= allowed_hosts.join(',') %>
  
 
 
